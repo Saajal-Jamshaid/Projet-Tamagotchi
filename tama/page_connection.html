@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ConnecterMacaque</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+  <!-- Navbar content -->
+</nav>
+
+<!-- "Home" button -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <a href="index.html" class="btn btn-primary">Home</a>
+    </div>
+  </div>
+</div>
+
+<div id="page-container">
+  <div class="jumbotron">
+    <h1>Bienvenue !</h1>
+  </div>
+
+  <div class="row" id="connexion-container">
+    <div class="col-md-3"></div>
+    <div class="col-md-7">
+      <form class="form-signin" id="login-form">
+        <h2 class="form-signin-heading">Se connecter</h2>
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+        <label for="inputPassword" class="sr-only">Mot de passe</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Se souvenir de moi
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Envoyer !</button>
+      </form>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#login-form').submit(function(e) {
+      e.preventDefault(); // Prevent form submission
+
+      // Get input values
+      const email = $('#inputEmail').val();
+      const password = $('#inputPassword').val();
+
+      // Make AJAX request to login endpoint
+      $.ajax({
+        url: 'http://192.168.64.242:35000/login',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ email: email, password: password }),
+        success: function(response) {
+          // Handle successful login
+          alert('Login successful!');
+          // Set the token as a cookie that expires after 1 hour
+          document.cookie = `token=${response.token}; max-age=3600`; // 3600 seconds = 1 hour
+          // Redirect to another page if needed
+          window.location.href = 'http://127.0.0.1:5500/tama/profil.html'; // Redirect to profile.html
+        },
+        error: function(xhr, status, error) {
+          // Handle login error
+          const errorMessage = JSON.parse(xhr.responseText).error;
+          alert(errorMessage);
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
